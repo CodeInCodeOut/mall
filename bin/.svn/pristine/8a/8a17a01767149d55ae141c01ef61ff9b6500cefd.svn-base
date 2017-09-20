@@ -1,0 +1,85 @@
+package shop;
+
+import static org.junit.Assert.assertEquals;
+
+import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.dayuanit.shop.domain.UserAddress;
+import com.dayuanit.shop.mapper.UserAddressMapper;
+
+@ContextConfiguration("/spring/spring-app.xml")
+@RunWith(SpringJUnit4ClassRunner.class)
+@Transactional
+public class UserAdressTest {
+	
+
+	@Autowired
+	private UserAddressMapper userAddressMapper; 
+	
+	private UserAddress userAddress;
+	
+	@Before
+	public void init() {
+		userAddress = new UserAddress();
+		userAddress.setArea("11");
+		userAddress.setCity("000");
+		userAddress.setDtaAddress("0000");
+		userAddress.setIsDefauAdress(1);
+		userAddress.setPhone("11111");
+		userAddress.setUserRealName("1111");
+		userAddress.setUserId(1);
+		userAddress.setProvince("111");
+	}
+	
+	@Rollback
+	@Test
+	public void testAdd() {
+		int rows = userAddressMapper.addUserAddress(userAddress);
+		assertEquals(1, rows);
+	}
+	
+	@Rollback
+	@Test
+	public void testQueryUserAddressByUserId() {
+		int rows = userAddressMapper.addUserAddress(userAddress);
+		List<UserAddress> listUserAddress = userAddressMapper.queryUserAddressByUserId(userAddress.getUserId());
+		assertEquals(listUserAddress.size(), 1);
+	}
+	
+	@Rollback
+	@Test
+	public void testQueryUserDefuAddressByUserId() {
+		int rows = userAddressMapper.addUserAddress(userAddress);
+		UserAddress ua = userAddressMapper.queryUserDefuAddressByUserId(userAddress.getUserId());
+		assertEquals(ua.getArea(), userAddress.getArea());
+	}
+	
+	@Rollback
+	@Test
+	public void testSetDefuAdress() {
+		 userAddressMapper.addUserAddress(userAddress);
+		 int rows =userAddressMapper.setDefuAdress(userAddress.getId());
+		 assertEquals(1, rows);
+	}
+	
+	@Rollback
+	@Test
+	public void testDeleteAdress() {
+		 userAddressMapper.addUserAddress(userAddress);
+		 int rows = userAddressMapper.deleteAdress(userAddress.getId());
+		 assertEquals(1, rows);
+	}
+	
+	
+	
+
+}

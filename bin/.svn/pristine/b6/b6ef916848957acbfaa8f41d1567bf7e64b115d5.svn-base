@@ -1,0 +1,18 @@
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+	<!-- 定义 别名 -->
+	<typeAliases>
+		<typeAlias type="com.dayuanit.shop.domain.GoodsSort" alias="goodsSort"/>
+		<typeAlias type="com.dayuanit.shop.domain.Goods" alias="goods"/>
+		<typeAlias type="com.dayuanit.shop.domain.User" alias="user"/>
+		<typeAlias type="com.dayuanit.shop.domain.ShopCart" alias="shopCart"/>
+		<typeAlias type="com.dayuanit.shop.domain.UserAddress" alias="userAddress"/>
+		<typeAlias type="com.dayuanit.shop.domain.Order" alias="order"/>
+	</typeAliases>
+
+
+
+</configuration>

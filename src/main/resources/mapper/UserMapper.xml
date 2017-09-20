@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dayuanit.shop.mapper.UserMapper">
+
+	<resultMap id="userResultMap" type="user">
+		<id property="id" column="id"/>
+		<result property="userName" column="user_name"/>
+		<result property="password" column="password"/>
+		<result property="email" column="email"/>
+		<result property="status" column="status"/>
+		<result property="createTime" column="create_time"/>
+		<result property="modifyTime" column="modify_time"/>	
+	</resultMap>
+	
+	<sql id="mall_user_filed">
+	id, user_name, password, email, status, create_time, modify_time
+	</sql>
+	
+	<insert id="addUser" parameterType="user" useGeneratedKeys="true" keyProperty="id">
+	 insert into mall_user (user_name, password, email, status, create_time, modify_time)
+	 value(#{userName}, #{password}, #{email}, "1", now(), now());
+	</insert>
+	
+	<!-- 设置 useGeneratedKeys="true" ，用keyProperty 去指定主键名称 主键返回到note中的id -->
+	
+	
+	<select id="queryUserByUserName" parameterType="string" resultMap="userResultMap">
+		 select <include refid="mall_user_filed"></include> from mall_user 
+		 where user_name = #{userName} and status="1";	
+	</select>
+	
+	<select id="queryUserByUserId" parameterType="int" resultMap="userResultMap">
+		 select <include refid="mall_user_filed"></include> from mall_user 
+		 where id = #{userId} and status="1";	
+	</select>
+
+</mapper>
+

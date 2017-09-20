@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dayuanit.shop.mapper.OrderMapper">
+
+	<resultMap id="orderResultMap" type="order">
+		<id property="id" column="id"/>
+		<result property="userId" column="user_id"/>
+		<result property="status" column="status"/>
+		<result property="orderFrom" column="order_from"/>
+		<result property="totalPrice" column="order_total_price"/>
+		<result property="createTime" column="create_time"/>
+		<result property="modifyTime" column="modify_time"/>
+		<result property="payChannel" column="pay_channel"/>
+		<result property="provinceName" column="province_name"/>
+		<result property="cityName" column="city_name"/>
+		<result property="areaName" column="area_name"/>
+		<result property="dtaAddress" column="detail_address"/>
+		<result property="userRealName" column="user_real_name"/>
+		<result property="phone" column="phone"/>
+	</resultMap>
+	
+	<sql id="shop_order_filed">
+		id, user_id, status, order_from, order_total_price, create_time, modify_time,
+		pay_channel, province_name, city_name, area_name, detail_address, user_real_name, phone
+	</sql>
+	
+	<insert id="createOrder" parameterType="order" useGeneratedKeys="true" keyProperty="id">
+		insert into shop_order(user_id, status, order_from, order_total_price,create_time, modify_time)
+		value (#{userId}, #{status}, #{orderFrom},  #{totalPrice}, now(), now());
+	</insert>
+	
+	<select id="listOrderByUserIdAndStatus" parameterType="int" resultMap="orderResultMap">
+		select <include refid="shop_order_filed"></include> from shop_order
+		<where>
+		<if test="userId != null">
+			and user_id=#{userId} 
+		</if>
+		<if test="status != null">
+			and status=#{status};
+		</if>
+		</where>
+	</select>
+	
+	<update id="changeOrderStatus" parameterType="java.util.HashMap">
+		update shop_order set status=#{status}, modify_time=now() where user_id=#{userId} and id=#{orderId};
+	</update>
+	
+	<select id="getOrderById" parameterType="int" resultMap="orderResultMap">
+		select <include refid="shop_order_filed"></include> from shop_order
+		where id=#{orderId} and user_id=#{userId};
+	</select>
+	
+	<update id="updateOrderToPay" parameterType="int">
+		update shop_order 
+		<trim prefix="set" suffixOverrides=",">
+			modify_time=now(),
+		<if test="payChannel != null">
+			pay_channel = #{payChannel},
+		</if>
+		<if test="provinceName != null">
+			province_name = #{provinceName},
+		</if>
+		<if test="cityName != null">
+			city_name = #{cityName},
+		</if>
+		<if test="areaName != null">
+			area_name = #{areaName},
+		</if>
+		<if test="dtaAddress != null">
+			detail_address = #{dtaAddress},
+		</if>
+		<if test="userRealName != null">
+			user_real_name = #{userRealName},
+		</if>
+		<if test="phone != null">
+			phone = #{phone},
+		</if>
+		</trim>
+		where id=#{id} and user_id=#{userId};
+	</update>
+	
+	 
+</mapper>
+

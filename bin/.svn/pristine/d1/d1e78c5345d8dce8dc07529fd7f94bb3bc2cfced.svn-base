@@ -1,0 +1,83 @@
+package com.dayuanit.shop.controller;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.dayuanit.shop.domain.Goods;
+import com.dayuanit.shop.domain.GoodsSort;
+import com.dayuanit.shop.dto.AjaxResultDTO;
+import com.dayuanit.shop.service.DisplayService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+@Controller
+@RequestMapping("/display")
+public class DisplayController {
+	
+	
+	private static final  Logger log = LoggerFactory.getLogger(DisplayController.class);
+	
+	@Autowired
+	private DisplayService displayService;
+	
+	@RequestMapping("/displayView")
+	@ResponseBody
+	public AjaxResultDTO displayView(HttpServletRequest req, Integer sortId) {
+		try {
+		
+			Map<String, Object> map = displayService.display(sortId);
+			
+			return AjaxResultDTO.success(map);
+		} catch(Exception e) {
+			log.info("sortId{}", sortId);
+			return AjaxResultDTO.failed("访问异常");
+		}
+	
+	}
+	
+	@RequestMapping("/ListSort")
+	@ResponseBody
+	public AjaxResultDTO listSort() {
+		try {
+			List<GoodsSort> listSort = displayService.listSort();
+			
+			ObjectMapper om = new ObjectMapper();
+			String json = om.writerWithDefaultPrettyPrinter().writeValueAsString(AjaxResultDTO.success(listSort));
+			System.out.println(json);
+			return AjaxResultDTO.success(listSort);
+		} catch(Exception e) {
+			return AjaxResultDTO.failed("访问异常");
+		}
+		
+	}
+	
+	@RequestMapping("/listGoods")
+	@ResponseBody
+	public AjaxResultDTO listGoods(HttpServletRequest req, Integer sortId) {
+		try {
+			List<Goods> listGoods = displayService.listGoods(sortId);
+			return AjaxResultDTO.success(listGoods);
+		} catch(Exception e) {
+			return AjaxResultDTO.failed("访问异常");
+		}
+		
+	}
+	
+	@RequestMapping("/toGoodsIntroduce")
+	public String toGoodsIntroduce(Integer goodsId, ModelMap mm) {
+		Goods thisGoods = displayService.getGoodsById(goodsId);
+		mm.addAttribute("thisGoods", thisGoods);
+		return "goods_introduce";
+	}
+	
+	
+}

@@ -1,0 +1,66 @@
+package com.dayuanit.shop.vo;
+
+public class OrderVo {
+	
+	private Integer price;
+	
+	private Integer userId;
+	
+	private Integer goodsId;
+	
+	private Integer goodsAccount;
+	
+	private Integer status;
+	
+	private Integer goodsTotalPrice;
+
+	public Integer getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Integer userId) {
+		this.userId = userId;
+	}
+
+	public Integer getGoodsId() {
+		return goodsId;
+	}
+
+	public void setGoodsId(Integer goodsId) {
+		this.goodsId = goodsId;
+	}
+
+	public Integer getGoodsAccount() {
+		return goodsAccount;
+	}
+
+	public void setGoodsAccount(Integer goodsAccount) {
+		this.goodsAccount = goodsAccount;
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
+	public Integer getGoodsTotalPrice() {
+		return goodsTotalPrice;
+	}
+
+	public void setGoodsTotalPrice(Integer goodsTotalPrice) {
+		this.goodsTotalPrice = goodsTotalPrice;
+	}
+
+	public Integer getPrice() {
+		return price;
+	}
+
+	public void setPrice(Integer price) {
+		this.price = price;
+	}
+	
+	
+}

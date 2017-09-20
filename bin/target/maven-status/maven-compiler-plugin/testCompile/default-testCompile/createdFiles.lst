@@ -1,0 +1,6 @@
+shop\GoodsMapperTest.class
+shop\GoodsSortMapperTest.class
+shop\ShopCartMapperTest.class
+shop\UserMapperTest.class
+shop\OrderMapperTest.class
+shop\UserAdressTest.class

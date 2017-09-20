@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dayuanit.shop.mapper.OrderDetailMapper">
+
+	<resultMap id="orderResultMap" type="orderDetail">
+		<id property="id" column="id"/>
+		<result property="orderId" column="order_id"/>
+		<result property="goodsId" column="goods_id"/>
+		<result property="price" column="goods_price"/>
+		<result property="goodsAccount" column="goods_account"/>
+		<result property="goodsTotalPrice" column="goods_total_price"/>
+		<result property="goodsName" column="goods_name"/>
+		<result property="createTime" column="create_time"/>
+	</resultMap>
+	
+	<sql id="shop_detail_order_filed">
+		id, goods_id, goods_price, goods_account, goods_total_price, goods_name, create_time
+	</sql>
+	
+	<insert id="saveOrderDetail" parameterType="orderDetail" useGeneratedKeys="true" keyProperty="id">
+		insert into shop_detail_order(order_id, goods_id, goods_account, goods_price, goods_total_price, goods_name, create_time)
+		value (#{orderId}, #{goodsId}, #{goodsAccount},  #{price}, #{goodsTotalPrice}, #{goodsName}, now());
+	</insert>
+	
+	<select id="listOrderDetail" parameterType="int" resultMap="orderResultMap">
+		select <include refid="shop_detail_order_filed"></include> from shop_detail_order
+		<where>
+		<if test="orderId != null">
+			and order_id=#{orderId} 
+		</if>
+		
+		</where>
+	</select>
+	
+	
+	
+	
+	 
+</mapper>
+

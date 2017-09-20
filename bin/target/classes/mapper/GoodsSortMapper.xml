@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dayuanit.shop.mapper.GoodsSortMapper">
+
+	<resultMap id="goodsSortResultMap" type="goodsSort">
+		<id property="id" column="id"/>
+		<result property="sortName" column="goods_sort_name"/>
+		<result property="status" column="status"/>
+		<result property="createTime" column="create_time"/>
+		<result property="modifyTime" column="modify_time"/>
+	</resultMap>
+	
+	<sql id="goods_sort_filed">
+		id, goods_sort_name, create_time, modify_time, status
+	</sql>
+	
+	<insert id="addGoodsSort" parameterType="goodsSort" useGeneratedKeys="true" keyProperty="id">
+		insert into goods_sort(goods_sort_name, create_time, modify_time, status)
+		value (#{sortName}, now(), now(), #{status});
+	</insert>
+	
+	<select id="getGoodsSort" parameterType="int" resultMap="goodsSortResultMap">
+		select <include refid="goods_sort_filed"></include> from goods_sort
+		where status="1";
+	</select>
+	 
+</mapper>
+

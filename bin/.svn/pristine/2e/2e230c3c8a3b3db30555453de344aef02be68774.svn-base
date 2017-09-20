@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 可以这样描述配置文件的基本结构：以<configuration>开头，
+后面有零个或多个<appender>元素，有零个或多个<logger>元素，有最多一个<root>元素 -->
+<configuration>
+    
+    
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%-5level] [%logger.%M:%L] |%msg%n</pattern>
+        </encoder>
+    </appender>
+    
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+	    <file>/var/log/shop/testFile.log</file>
+	    	<append>true</append>
+	    <immediateFlush>true</immediateFlush>
+	    
+	    <encoder>
+	      <pattern>%d{yyyy-MM-dd HH:mm:ss} [%-5level] [%logger.%M:%L] |%msg%n</pattern>
+	    </encoder>
+  	</appender>
+  
+  	<appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+    <appender-ref ref="FILE" />
+    <append>true</append>
+    <immediateFlush>true</immediateFlush>
+    <!-- <queueSize>512</queueSize>
+    <discardingThreshold>0</discardingThreshold> 设置异步缓存-->
+  	</appender>
+  
+	  <appender name="FILE2" class="ch.qos.logback.core.FileAppender">
+	    <file>/var/log/shop/controller.log</file>
+	    <append>true</append>
+	    <immediateFlush>true</immediateFlush>
+	    <encoder>
+	      <pattern>%d{yyyy-MM-dd HH:mm:ss} [%-5level] [%logger.%M:%L] |%msg%n</pattern>
+	    </encoder>
+	  </appender>
+
+	  <logger name="com.dayuanit.shop.controller" level="INFO" additivity="true" >
+	  	<appender-ref ref="FILE2" />
+	  </logger>
+
+	  <root level="DEBUG">
+	    <appender-ref ref="STDOUT" />
+	    <appender-ref ref="FILE" />
+	  </root>
+  
+
+
+</configuration>

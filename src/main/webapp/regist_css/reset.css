@@ -1,0 +1,35 @@
+*{
+	margin: 0;
+	padding: 0;
+}
+body{
+	font-family: "宋体";
+	font-size: 12px;
+}
+img{
+	border: none;
+}
+li{
+	list-style: none;
+}
+input,select,textarea{
+	outline: none;
+	border: 0;
+}
+textarea{
+	resize: none;
+}
+a{
+	color: #000;
+	text-decoration: none;
+}
+.clearfix:after{
+	content: ".";
+	height: 0;
+	display: block;
+	visibility: hidden;
+	clear: both;
+}
+.clearfix{
+	zoom: 1;
+}
