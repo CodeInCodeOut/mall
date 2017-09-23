@@ -7,11 +7,12 @@ import javax.jws.WebService;
 
 import com.dayuanit.pay.domain.PayOrder;
 import com.dayuanit.pay.domain.PayType;
+import com.dayuanit.pay.dto.PayOrderUrlDTO;
 
 @WebService
 public interface PayService {
 	
-	Map<String, Object> addPayOrder(PayOrder payOrder);
+	PayOrderUrlDTO addPayOrder(PayOrder payOrder);
 	
 	List<PayType> listPayType();
 	

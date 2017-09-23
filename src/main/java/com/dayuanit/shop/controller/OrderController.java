@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSON;
+import com.dayuanit.pay.dto.PayOrderUrlDTO;
 import com.dayuanit.shop.domain.Order;
 import com.dayuanit.shop.dto.AjaxResultDTO;
 import com.dayuanit.shop.dto.BuyGoodsDto;
@@ -66,8 +67,8 @@ public class OrderController {
 			Integer userId = 1;
 			log.info("订单修改状态待支付信息orderId{}", orderId, "订单修改状态待支付信息userId{}", userId, "订单修改状态待支付信息payChannel{}", payChannel, "订单修改状态待支付信息addressId{}", addressId);
 			try {
-				Map<String, Object> map = orderService.orderToPay(orderId, userId, payChannel, addressId);
-			return AjaxResultDTO.success(map);
+				PayOrderUrlDTO payOrderUrlDTO = orderService.orderToPay(orderId, userId, payChannel, addressId);
+			return AjaxResultDTO.success(payOrderUrlDTO);
 		} catch (ShopException se) {
 			log.error("订单修改状态待支付 异常信息 ， {}", se.getMessage(), se);
 			return AjaxResultDTO.failed("系统异常  请联系客服");

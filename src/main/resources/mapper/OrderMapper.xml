@@ -101,11 +101,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		</trim>
 	</select>
 	 
-	
-	<update id="changeOrderStatus" parameterType="java.util.HashMap">
-		update shop_order set status=#{status}, modify_time=now() where user_id=#{userId} and id=#{orderId};
-	</update>
-	
 	<select id="getOrderById" parameterType="int" resultMap="orderResultMap">
 		select <include refid="shop_order_filed"></include> from shop_order
 		where id=#{orderId} and user_id=#{userId};
@@ -138,6 +133,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		</if>
 		</trim>
 		where id=#{id} and user_id=#{userId};
+	</update>
+	
+	<select id="getOrderForUpdate" parameterType="int" resultMap="orderResultMap">
+		select <include refid="shop_order_filed"></include> from shop_order
+		where id=#{orderId};
+	</select>
+	
+	<update id="changeOrderStatus" parameterType="java.util.HashMap">
+		update shop_order set status=#{status}, modify_time=now() where user_id=#{userId} and id=#{orderId};
 	</update>
 	
 	 

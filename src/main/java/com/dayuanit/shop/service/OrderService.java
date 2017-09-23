@@ -3,6 +3,7 @@ package com.dayuanit.shop.service;
 import java.util.List;
 import java.util.Map;
 
+import com.dayuanit.pay.dto.PayOrderUrlDTO;
 import com.dayuanit.shop.domain.Order;
 import com.dayuanit.shop.dto.BuyGoodsDto;
 import com.dayuanit.shop.dto.OrderDTO;
@@ -23,13 +24,15 @@ public interface OrderService {
 	
 	OrderGoodsDTO listOrder(Integer orderId, Integer userId);
 	
-	Map<String, Object> orderToPay(Integer orderId, Integer userId, Integer payChannel, Integer addressId);
+	PayOrderUrlDTO orderToPay(Integer orderId, Integer userId, Integer payChannel, Integer addressId);
 	
 	List<OrderDTO> listMyOrder(Integer userId, Integer status);
 	
 	List<OrderDTO> listMyOrder1(Integer userId, Integer status);
 	
 	PageUtils<OrderDTO> listMyOrder2(Integer userId, Integer status, Integer pageNum);
+	
+	void processPayresult(Integer orderId, Integer payId);
 	
 	
 	

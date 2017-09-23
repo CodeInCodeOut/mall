@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dayuanit.pay.domain.PayOrder;
+import com.dayuanit.pay.dto.PayOrderUrlDTO;
 import com.dayuanit.pay.service.PayService;
 import com.dayuanit.shop.Enum.GoodsStatusEnum;
 import com.dayuanit.shop.Enum.OrderFromEnum;
@@ -351,7 +352,7 @@ public class OrderServiceImpl implements OrderService{
 	}
 
 	@Override
-	public Map<String, Object> orderToPay(Integer orderId, Integer userId, Integer payChannel, Integer addressId) {
+	public PayOrderUrlDTO orderToPay(Integer orderId, Integer userId, Integer payChannel, Integer addressId) {
 		// TODO Auto-generated method stub
 		Order order = orderMapper.getOrderById(orderId, userId);
 		
@@ -409,9 +410,9 @@ public class OrderServiceImpl implements OrderService{
 		payOrder.setPayChannel(order.getPayChannel());
 		payOrder.setUserId(order.getUserId());
 		
-		Map<String, Object> map = payService.addPayOrder(payOrder);
+		PayOrderUrlDTO payOrderUrlDTO = payService.addPayOrder(payOrder);
 		
-		return map;
+		return payOrderUrlDTO;
 		
 		
 	}
@@ -531,6 +532,24 @@ public class OrderServiceImpl implements OrderService{
 		pageUtils.setData(listOrderDto);
 		
 		return pageUtils;
+	}
+
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public void processPayresult(Integer orderId, Integer payId) {
+		Order order = orderMapper.getOrderForUpdate(orderId);
+		if (OrderStatusEnum.UNPAY.getCode() != order.getStatus()) {
+			return;
+		}
+		
+		int rows = orderMapper.changeOrderStatus(orderId, order.getUserId(), OrderStatusEnum.PAID.getCode());
+		
+		if (1 != rows) {
+			throw new ShopException("--订单更新待付款失败---");		
+		}
+		
+		log.info("客户的订单支付成功的反馈 可以做发信息的反馈等业务逻辑");
+		
 	}
 
 	

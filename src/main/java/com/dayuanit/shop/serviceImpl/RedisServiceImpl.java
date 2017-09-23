@@ -69,5 +69,11 @@ public class RedisServiceImpl implements RedisService{
 		
 	}
 
+	@Override
+	public String popPayMsg() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	
 }

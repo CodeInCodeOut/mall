@@ -12,4 +12,6 @@ public interface RedisService {
 	
 	List<Map<String, String>> getPCA(String key);
 	
+	String popPayMsg();
+	
 }

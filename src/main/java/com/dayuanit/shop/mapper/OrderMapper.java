@@ -27,4 +27,6 @@ public interface OrderMapper {
 	
 	int getOrderTotal(@Param("userId")Integer userId, @Param("status")Integer status);
 	
+	Order getOrderForUpdate(Integer orderId);
+	
 }
