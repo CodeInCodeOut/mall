@@ -9,90 +9,7 @@
 	</head>
 	<body>
 		<!------------------------------head------------------------------>
-		<div class="head ding">
-			<div class="wrapper clearfix">
-				<div class="clearfix" id="top">
-					<h1 class="fl"><a href="index.html"><img src="/img/logo.png"/></a></h1>
-					<div class="fr clearfix" id="top1">
-						<p class="fl">
-							<a href="#" id="login">登录</a>
-							<a href="#" id="reg">注册</a>
-						</p>
-						<form action="#" method="get" class="fl">
-							<input type="text" placeholder="搜索" />
-							<input type="button" />
-						</form>
-						<div class="btn fl clearfix">
-							<a href="mygxin.html"><img src="/img/grzx.png"/></a>
-							<a href="#" class="er1"><img src="/img/ewm.png"/></a>
-							<a href="cart.html"><img src="/img/gwc.png"/></a>
-							<p><a href="#"><img src="/img/smewm.png"/></a></p>
-						</div>
-					</div>
-				</div>
-				<ul class="clearfix" id="bott">
-					<li><a href="index.html">首页</a></li>
-					<li>
-						<a href="#">所有商品</a>
-						<div class="sList">
-							<div class="wrapper  clearfix">
-								<a href="paint.html">
-									<dl>
-										<dt><img src="img/nav1.jpg"/></dt>
-										<dd>浓情欧式</dd>
-									</dl>
-								</a>
-								<a href="paint.html">
-									<dl>
-										<dt><img src="img/nav2.jpg"/></dt>
-										<dd>浪漫美式</dd>
-									</dl>
-								</a>
-								<a href="paint.html">
-									<dl>
-										<dt><img src="img/nav3.jpg"/></dt>
-										<dd>雅致中式</dd>
-									</dl>
-								</a>
-								<a href="paint.html">
-									<dl>
-										<dt><img src="img/nav6.jpg"/></dt>
-										<dd>简约现代</dd>
-									</dl>
-								</a>
-								<a href="paint.html">
-									<dl>
-										<dt><img src="img/nav7.jpg"/></dt>
-										<dd>创意装饰</dd>
-									</dl>
-								</a>
-							</div>
-						</div>
-					</li>
-					<li>
-						<a href="flowerDer.html">装饰摆件</a>
-						<div class="sList2">
-							<div class="clearfix">
-								<a href="proList.html">干花花艺</a>
-								<a href="vase_proList.html">花瓶花器</a>
-							</div>
-						</div>
-					</li>
-					<li>
-						<a href="decoration.html">布艺软饰</a>
-						<div class="sList2">
-							<div class="clearfix">
-								<a href="zbproList.html">桌布罩件</a>
-								<a href="bzproList.html">抱枕靠垫</a>
-							</div>
-						</div>
-					</li>
-					<li><a href="paint.html">墙式壁挂</a></li>
-					<li><a href="perfume.html">蜡艺香薰</a></li>
-					<li><a href="idea.html">创意家居</a></li>
-				</ul>
-			</div>
-		</div>
+		<jsp:include page="commn/head.jsp"></jsp:include>
 		<!------------------------------idea------------------------------>
 		<div class="address mt">
 			<div class="wrapper clearfix">
@@ -107,30 +24,8 @@
 		<!------------------------------Bott------------------------------>
 		<div class="Bott">
 			<div class="wrapper clearfix">
-				<div class="zuo fl">
-					<h3>
-						<a href="#"><img src="/img/tx.png"/></a>
-						<p class="clearfix"><span class="fl">[羊羊羊]</span><span class="fr">[退出登录]</span></p>
-					</h3>
-					<div>
-						<h4>我的交易</h4>
-						<ul>
-							<li><a href="cart.html">我的购物车</a></li>
-							<li><a href="myorderq.html">我的订单</a></li>
-							<li><a href="myprod.html">评价晒单</a></li>
-						</ul>
-						<h4>个人中心</h4>
-						<ul>
-							<li><a href="mygxin.html">我的中心</a></li>
-							<li><a href="address.html">地址管理</a></li>
-						</ul>
-						<h4>账户管理</h4>
-						<ul>
-							<li  class="on"><a href="mygrxx.html">个人信息</a></li>
-							<li><a href="remima.html">修改密码</a></li>
-						</ul>
-					</div>
-				</div>
+				<jsp:include page="commn/zuo.jsp"></jsp:include>
+				
 				<div class="you fl" id="orderShow">
 					<div class="my clearfix">
 						<h2 class="fl">我的订单</h2>
@@ -168,7 +63,7 @@
 							
 							<p class="fr">
 								<a href="#" v-if="order.status == 1">立即支付</a>
-								<a href="orderxq.html">订单详情</a>
+								<a v-bind:href="'/userOrder/toMyOrderDetail.do?orderId='+order.id" >订单详情</a>
 							</p>
 						</div>
 					</div>
@@ -182,59 +77,11 @@
 			</div>
 		</div>
 		<!--返回顶部-->
-		<div class="gotop">
-			<a href="cart.html">
-			<dl>
-				<dt><img src="/img/gt1.png"/></dt>
-				<dd>去购<br />物车</dd>
-			</dl>
-			</a>
-			<a href="#" class="dh">
-			<dl>
-				<dt><img src="/img/gt2.png"/></dt>
-				<dd>联系<br />客服</dd>
-			</dl>
-			</a>
-			<a href="mygxin.html">
-			<dl>
-				<dt><img src="/img/gt3.png"/></dt>
-				<dd>个人<br />中心</dd>
-			</dl>
-			</a>
-			<a href="#" class="toptop" style="display: none">
-			<dl>
-				<dt><img src="/img/gt4.png"/></dt>
-				<dd>返回<br />顶部</dd>
-			</dl>
-			</a>
-			<p>400-800-8200</p>
-		</div>
+		<jsp:include page="commn/gtop.jsp"></jsp:include>
 		<!--footer-->
-		<div class="footer">
-			<div class="top">
-				<div class="wrapper">
-					<div class="clearfix">
-						<a href="#2" class="fl"><img src="/img/foot1.png"/></a>
-						<span class="fl">7天无理由退货</span>
-					</div>
-					<div class="clearfix">
-						<a href="#2" class="fl"><img src="/img/foot2.png"/></a>
-						<span class="fl">15天免费换货</span>
-					</div>
-					<div class="clearfix">
-						<a href="#2" class="fl"><img src="/img/foot3.png"/></a>
-						<span class="fl">满599包邮</span>
-					</div>
-					<div class="clearfix">
-						<a href="#2" class="fl"><img src="/img/foot4.png"/></a>
-						<span class="fl">手机特色服务</span>
-					</div>
-				</div>
-			</div>
-			<p class="dibu">最家家居&copy;2013-2017公司版权所有 京ICP备080100-44备0000111000号<br />
-			违法和不良信息举报电话：188-0130-1238，本网站所列数据，除特殊说明，所有数据均出自我司实验室测试</p>
-		</div>
-		<script type="text/javascript" src="/js/jquery-mini.js"></script>
+		<jsp:include page="commn/footer.jsp"></jsp:include>
+		
+<script type="text/javascript" src="/js/jquery-mini.js"></script>
 <script type="text/javascript" src="/js/vue.js"></script>
 <script type="text/javascript" charset="utf-8">
 var currentStatus = -1;
@@ -278,6 +125,44 @@ function prePage() {
 	}
 	currentPage = currentPage - 1;
 	loadMyOrder(currentPage);
+}
+
+function toOrderDetail() {
+	$.ajax({
+	    url:'/userOrder/loadMyOrder.do',
+	    type:'POST', //GET
+	    async:true,    //或false,是否异步
+	    data:{
+	    	status : currentStatus,
+	    	pageNum : currentPage,
+	    },
+	    timeout:5000,    //超时时间
+	    dataType:'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+	    beforeSend:function(xhr){
+	        console.log(xhr)
+	        console.log('发送前')
+	    },
+	    success:function(data,textStatus,jqXHR){
+	        
+	        if (!data.success) {
+	        	alert(data.message);
+	        	return;
+	        }
+	        
+	        
+	        window.location.href="/userOrder/toMyOrderDetail.do?#"
+	       
+	    },
+	    error:function(xhr,textStatus){
+	        console.log('错误')
+	        console.log(xhr)
+	        console.log(textStatus)
+	    },
+	    complete:function(){
+	        console.log('结束')
+	    }
+	});
+	
 }
 
 function loadMyOrder(currentPage) {

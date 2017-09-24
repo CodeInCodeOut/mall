@@ -12,15 +12,7 @@
 	</head>
 	<body>
 		<!------------------------------head------------------------------>
-		<div class="head ding">
-			<div class="wrapper clearfix">
-				<div class="clearfix" id="top">
-					<h1 class="fl"><a href="index.html"><img src="/img/logo.png"/></a></h1>
-					<div class="fr clearfix" id="top1">
-					</div>
-				</div>				
-			</div>
-		</div>
+		<jsp:include page="commn/head.jsp"></jsp:include>
 		<!------------------------------idea------------------------------>
 		<div class="address mt">
 			<div class="wrapper clearfix">
@@ -35,30 +27,7 @@
 		<!------------------------------Bott------------------------------>
 		<div class="Bott">
 			<div class="wrapper clearfix">
-				<div class="zuo fl">
-					<h3>
-						<a href="#"><img src="/img/tx.png"/></a>
-						<p class="clearfix"><span class="fl">[羊羊羊]</span><span class="fr">[退出登录]</span></p>
-					</h3>
-					<div>
-						<h4>我的交易</h4>
-						<ul>
-							<li><a href="cart.html">我的购物车</a></li>
-							<li><a href='/userOrder/myorder.do?'>我的订单</a></li>
-							<li><a href="myprod.html">评价晒单</a></li>
-						</ul>
-						<h4>个人中心</h4>
-						<ul>
-							<li><a href="mygxin.html">我的中心</a></li>
-							<li class="on"><a href="address.html">地址管理</a></li>
-						</ul>
-						<h4>账户管理</h4>
-						<ul>
-							<li><a href="mygrxx.html">个人信息</a></li>
-							<li><a href="remima.html">修改密码</a></li>
-						</ul>
-					</div>
-				</div>
+				<jsp:include page="commn/zuo.jsp"></jsp:include>
 				<div class="you fl" id="addressShow">
 					<h2>收货地址</h2>
 						<div>
@@ -116,38 +85,8 @@
 			</form>
 		</div>
 		<!--返回顶部-->
-		<div class="gotop">
-			<a href="cart.html">
-			<dl>
-				<dt><img src="/img/gt1.png"/></dt>
-				<dd>去购<br />物车</dd>
-			</dl>
-			</a>
-			<a href="#" class="dh">
-			<dl>
-				<dt><img src="/img/gt2.png"/></dt>
-				<dd>联系<br />客服</dd>
-			</dl>
-			</a>
-			<a href="mygxin.html">
-			<dl>
-				<dt><img src="/img/gt3.png"/></dt>
-				<dd>个人<br />中心</dd>
-			</dl>
-			</a>
-			<a href="#" class="toptop" style="display: none">
-			<dl>
-				<dt><img src="/img/gt4.png"/></dt>
-				<dd>返回<br />顶部</dd>
-			</dl>
-			</a>
-			<p>400-800-8200</p>
-		</div>
-		<div class="footer">
-			<p class="dibu">最家家居&copy;2013-2017公司版权所有 京ICP备080100-44备0000111000号<br />
-			违法和不良信息举报电话：400-800-8200，本网站所列数据，除特殊说明，所有数据均出自我司实验室测试</p>
-		</div>
-		
+		<jsp:include page="commn/gtop.jsp"></jsp:include>	
+			
 <script type="text/javascript" src="/js/jquery-mini.js"></script>
 <script type="text/javascript" src="/js/jquery-ui-js.js"></script>
 <script type="text/javascript" src="/js/vue.js"></script>

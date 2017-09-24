@@ -26,13 +26,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<select id="listOrderDetail" parameterType="int" resultMap="orderResultMap">
 		select <include refid="shop_detail_order_filed"></include> from shop_detail_order
-		<where>
-		<if test="orderId != null">
-			and order_id=#{orderId} 
-		</if>
-		
-		</where>
+		where order_id=#{orderId};
 	</select>
+	
+	
 	
 	
 	

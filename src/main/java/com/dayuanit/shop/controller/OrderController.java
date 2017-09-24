@@ -1,14 +1,12 @@
 package com.dayuanit.shop.controller;
 
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,12 +16,15 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.fastjson.JSON;
 import com.dayuanit.pay.dto.PayOrderUrlDTO;
 import com.dayuanit.shop.domain.Order;
+import com.dayuanit.shop.domain.OrderDetail;
 import com.dayuanit.shop.dto.AjaxResultDTO;
 import com.dayuanit.shop.dto.BuyGoodsDto;
 import com.dayuanit.shop.dto.OrderDTO;
+import com.dayuanit.shop.dto.OrderDetailDTO;
 import com.dayuanit.shop.dto.OrderGoodsDTO;
 import com.dayuanit.shop.exception.ShopException;
 import com.dayuanit.shop.service.DisplayService;
+import com.dayuanit.shop.service.OrderDetailService;
 import com.dayuanit.shop.service.OrderService;
 import com.dayuanit.shop.utils.PageUtils;
 import com.dayuanit.shop.vo.BuyGoodsVo;
@@ -37,9 +38,20 @@ public class OrderController {
 	@Autowired
 	private OrderService orderService;
 	
+	@Autowired
+	private OrderDetailService  orderDetailService;
+	
 	@RequestMapping("/myorder")
 	public String myorder() {
 		return "myorder";
+	}
+	
+	@RequestMapping("/toMyOrderDetail")
+	public ModelAndView toMyOrderDetail(String orderId) {
+		ModelAndView mv = new ModelAndView();
+		mv.addObject("orderId", orderId);
+		mv.setViewName("orderDetail");
+		return mv;
 	}
 	
 	@RequestMapping("/toAddress")
@@ -209,6 +221,26 @@ public class OrderController {
 			log.error("加载订单未知异常信息{}", e.getMessage(), e);
 			return AjaxResultDTO.failed("系统异常  请联系客服");
 		}
+		
+	}
+	
+	
+	@RequestMapping("/listOrderDetail")
+	@ResponseBody
+	public AjaxResultDTO listOrderDetail(Integer userId, Integer orderId) {
+		userId = 1;
+		try {
+			OrderDetailDTO  orderDetailDTO  = orderDetailService.listOrderDetail(userId, orderId);
+			return AjaxResultDTO.success(orderDetailDTO);
+		} catch(ShopException se) {
+			log.error("加载订单详情异常信息{}", se.getMessage(), se);
+			return AjaxResultDTO.failed("加载订单详情异常 请联系客服");
+		} catch (Exception e) {
+			log.error("加载订单详情未知异常信息{}", e.getMessage(), e);
+			return AjaxResultDTO.failed("系统异常  请联系客服");
+		}
+		
+		
 		
 		
 		
