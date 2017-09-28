@@ -14,5 +14,7 @@ public interface ShopCartService {
 	
 	void deleteGoodsById(Integer userId, Integer shopCartId);
 	
+	void deleteShopCartOnPay(Integer userId, Integer shopCartId);
+	
 
 }

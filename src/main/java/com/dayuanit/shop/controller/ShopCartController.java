@@ -1,12 +1,17 @@
 package com.dayuanit.shop.controller;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.redis.connection.RedisConnection;
+import org.springframework.data.redis.core.RedisCallback;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,13 +37,33 @@ public class ShopCartController extends BaseController{
 	@Autowired
 	private DisplayService displayService;
 	
+	@Autowired
+	private RedisTemplate<String, String> redisTemplate;
+	
 	@RequestMapping("/toIncreaseGoods")
 	@ResponseBody
 	public AjaxResultDTO toIncreaseGoods(HttpServletRequest req, Integer goodsId, Integer goodsAccount,  ModelMap mm) {
+		int userID = 1;
+		String cartKey = "%s:%s";
+		String key = String.format(cartKey, String.valueOf(userID), String.valueOf(goodsId));
 		try {
+			
+			boolean setFlag = redisTemplate.execute(new RedisCallback<Boolean>() {
+
+				@Override
+				public Boolean doInRedis(RedisConnection connection) throws DataAccessException {
+					
+					return connection.setNX(key.getBytes(), "uniqueCartToken".getBytes());
+				}
+			});
+			
+			if (!setFlag) {
+				return AjaxResultDTO.failed("重复提交 请稍后再试");
+			}
+			
 			Goods thisGoods = displayService.getGoodsById(goodsId);
 			mm.addAttribute("thisGoods", thisGoods);
-			int userID = 1;
+			
 			log.info("userID{}",userID, "goodsId{}", goodsId, "goodsAccount{}",goodsAccount);
 			shopCartService.increaseGoodsToShopCart(userID, goodsId, goodsAccount);
 			return AjaxResultDTO.success();
@@ -54,6 +79,8 @@ public class ShopCartController extends BaseController{
 			log.error("商品详情页 增加 减少 购物车的商品数量异常  商品ID{}", goodsId, "商品数量goodsAccount{}", goodsAccount);
 			log.error("购物车增加商品异常信息{}", e.getMessage(), e);
 			return AjaxResultDTO.failed("系统异常  请联系客服");
+		} finally {
+			redisTemplate.opsForValue().set(key, "uniqueCartToken", 10, TimeUnit.SECONDS);
 		}
 		 
 	}

@@ -15,4 +15,6 @@ public interface ShopCartMapper {
 	List<ShopCart> getShopCartByUserId(Integer userId);
 	
 	int changStatusById(@Param("status")Integer status, @Param("userId")Integer userId, @Param("shopCartId")Integer shopCartId);
+	
+	ShopCart getShopCartByCartId(@Param("userId")Integer userId, @Param("shopCartId")Integer shopCartId);
 }

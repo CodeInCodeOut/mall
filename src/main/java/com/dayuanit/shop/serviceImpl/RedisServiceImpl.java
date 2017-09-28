@@ -2,6 +2,7 @@ package com.dayuanit.shop.serviceImpl;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,6 +74,24 @@ public class RedisServiceImpl implements RedisService{
 	public String popPayMsg() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void saveCartId(List<Integer> cartIds, Integer userId) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Set<Integer> getCartId(Integer userId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void deleteKey(String key) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	

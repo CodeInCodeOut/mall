@@ -2,6 +2,8 @@ package com.dayuanit.shop.serviceImpl;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Resource;
 
@@ -10,8 +12,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.core.ListOperations;
+import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.SessionCallback;
+import org.springframework.data.redis.core.SetOperations;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +40,10 @@ public class RedisTempServiceImpl implements RedisService, InitializingBean{
 
 	@Autowired
 	private OrderService orderService;
+	
+	@Resource(name="redisTemplate")
+	private SetOperations<String, Integer> cartSetOperation;
+	
 	
 
 	@Override
@@ -100,6 +110,35 @@ public class RedisTempServiceImpl implements RedisService, InitializingBean{
 				}
 				
 			}, "处理订单状态为支付").start();
+		
+	}
+
+	@Override
+	public void saveCartId(List<Integer> cartIds, Integer userId) {
+		String key = "cart:cache:" + userId;
+		
+		redisTemplate.execute(new SessionCallback() {
+
+			@Override
+			public Object execute(RedisOperations operations) throws DataAccessException {
+				Long num = operations.opsForSet().add(key, cartIds.toArray());
+				operations.expire(key, 30, TimeUnit.MINUTES);
+				log.info("--------cartId cache--------");
+				return num;
+			}
+		});
+	}
+
+	@Override
+	public Set<Integer> getCartId(Integer userId) {
+		String key = "cart:cache:" + userId;
+		
+		return cartSetOperation.members(key);
+	}
+
+	@Override
+	public void deleteKey(String key) {
+		redisTemplate.delete(key);
 		
 	}
 

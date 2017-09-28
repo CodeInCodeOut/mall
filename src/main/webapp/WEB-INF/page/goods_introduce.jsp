@@ -81,7 +81,6 @@
 				<a href="###" onclick="addCart();">加入购物车</a>
 				<span class="ver_line"></span>
 				<input type="hidden" id = "goodsId" name = "goodsId" value=${thisGoods.id}>
-				<input type="hidden" id = "price" name = "price" value=${thisGoods.price}>
 				<a href="###" onclick="toBuy();">立即购买</a>
 			</div>
 			<p class="notice">注意：此商品可提供普通发票，不提供增值税发票。</p>
@@ -139,7 +138,6 @@ function addCart() {
         data:{
 	        goodsId:$('#goodsId').val(),
 	        goodsAccount : $('#goodsAccount').val(),
-	       
         },
         timeout:5000,    //超时时间
         dataType:'json',    //返回的数据格式：json/xml/html/script/jsonp/text
@@ -170,13 +168,12 @@ function addCart() {
 function toBuy() {
 	
 	$.ajax({
-        url:'/userOrder/createOrder.do', 
+        url:'/userOrder/nowCreateOrder.do', 
         type:'POST', //GET
         async:true,    //或false,是否异步
         data:{
 	        goodsId:$('#goodsId').val(),
 	        goodsAccount : $('#goodsAccount').val(),
-	        price : $('#price').val(),
         },
         timeout:5000,    //超时时间
         dataType:'json',    //返回的数据格式：json/xml/html/script/jsonp/text
@@ -190,8 +187,8 @@ function toBuy() {
             	alert(data.message);
             	return;
             }
-            
-            window.location = '/userOrder/toOrder.do?###'
+            data.data.id;
+            window.location = '/userOrder/toOrder.do?orderId=' + data.data.id;
         },
         error:function(xhr,textStatus){
             console.log('错误')

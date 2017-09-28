@@ -5,6 +5,8 @@ public class BuyGoodsVo {
 	private Integer goodsId;
 	
 	private Integer goodsAccount;
+	
+	private Integer shopCartId;
 
 	public Integer getGoodsId() {
 		return goodsId;
@@ -20,6 +22,14 @@ public class BuyGoodsVo {
 
 	public void setGoodsAccount(Integer goodsAccount) {
 		this.goodsAccount = goodsAccount;
+	}
+
+	public Integer getShopCartId() {
+		return shopCartId;
+	}
+
+	public void setShopCartId(Integer shopCartId) {
+		this.shopCartId = shopCartId;
 	}
 	
 	

@@ -383,8 +383,6 @@ function listUserAddress() {
 	
 }
 
-
-
 function cancelOrder(id) {
 	if (confirm("你确信要取消订单吗？")) {
 		$.ajax({

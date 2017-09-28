@@ -10,20 +10,21 @@
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context.xsd">
     
-    <bean id="transferJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-	    <!--  <property name="targetObject" ref="timeOutUnPayOrderRollBack"/>
-	    <property name="targetMethod" value="doTask"/>-->
+    <bean id="rollBackJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+	    <property name="targetObject" ref="timeOutUnPayOrderRollBack"/>
+	    <property name="targetMethod" value="doTask"/>
+	    <property name="concurrent" value="false"/>
 	</bean>
 	
-	<bean id="transferTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-	    <property name="jobDetail" ref="transferJob"/>
-	    <property name="cronExpression" value="0 1/30 * * * ?"/>
+	<bean id="rollBackTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+	    <property name="jobDetail" ref="rollBackJob"/>
+	    <property name="cronExpression" value="0/10 * * * * ?"/>
 	</bean>
 	
 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 	    <property name="triggers">
 	        <list>
-	            <ref bean="transferTrigger"/>
+	            <ref bean="rollBackTrigger"/>
 	        </list>
 	    </property>
 	</bean>

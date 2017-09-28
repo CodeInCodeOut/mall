@@ -1,0 +1,19 @@
+package com.dayuanit.shop.service;
+
+import java.util.List;
+
+import com.dayuanit.shop.domain.Order;
+
+public interface OrderService {
+	
+	void createOrder(Order order);
+	
+	List<Order> listEffectivedOrder(Integer userId, Integer status);
+	
+	void changeOrderStatus(Integer userId, Integer orderId, Integer status);
+	
+	void deleteOrder(Integer status, Integer userId, Integer orderId);
+	
+	void rollBackRepertoryTimeOut(Order order);
+	
+}

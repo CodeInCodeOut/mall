@@ -62,7 +62,7 @@
 							</div>
 							
 							<p class="fr">
-								<a href="#" v-if="order.status == 1">立即支付</a>
+								<a href="#" v-if="order.status == 1" v-on:click="orderToPay(index)">立即支付</a>
 								<a v-bind:href="'/userOrder/toMyOrderDetail.do?orderId='+order.id" >订单详情</a>
 							</p>
 						</div>
@@ -95,6 +95,13 @@ $(document).ready(function() {
 		el : '#orderShow',
 		data : {
 			orders : []
+		},
+		methods : {
+			
+			orderToPay : function(index) {
+				var order = this.orders[index];
+				unPayOrderToPay(order.id);
+			},
 		}
 	});
 	
@@ -127,14 +134,13 @@ function prePage() {
 	loadMyOrder(currentPage);
 }
 
-function toOrderDetail() {
+function unPayOrderToPay(orderId) {
 	$.ajax({
-	    url:'/userOrder/loadMyOrder.do',
+	    url:'/userOrder/unPayOrderToPay.do',
 	    type:'POST', //GET
 	    async:true,    //或false,是否异步
 	    data:{
-	    	status : currentStatus,
-	    	pageNum : currentPage,
+	    	orderId:orderId,
 	    },
 	    timeout:5000,    //超时时间
 	    dataType:'json',    //返回的数据格式：json/xml/html/script/jsonp/text
@@ -149,8 +155,8 @@ function toOrderDetail() {
 	        	return;
 	        }
 	        
-	        
-	        window.location.href="/userOrder/toMyOrderDetail.do?#"
+	        alert(orderId);
+	       window.location.href=data.data.payOrderUrl;
 	       
 	    },
 	    error:function(xhr,textStatus){

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.dayuanit.shop.Enum.ShopCartStatusEnum;
 import com.dayuanit.shop.domain.ShopCart;
 import com.dayuanit.shop.exception.ShopException;
 import com.dayuanit.shop.mapper.ShopCartMapper;
@@ -66,13 +67,32 @@ public class ShopCartServiceImpl implements ShopCartService {
 	public void deleteGoodsById(Integer userId, Integer shopCartId) {
 		// TODO Auto-generated method stub
 		
-		Integer status = 4;
-		int rows = shopCartMapper.changStatusById(status, userId, shopCartId);
+		
+		int rows = shopCartMapper.changStatusById(ShopCartStatusEnum.QUITSHOPCART.getCode(), userId, shopCartId);
 		
 		if (1 != rows) {
 			throw new ShopException("客户删除商品 在购物车 失败");
 		}
 		
+	}
+
+
+	@Override
+	public void deleteShopCartOnPay(Integer userId, Integer shopCartId) {
+		ShopCart shopCart = shopCartMapper.getShopCartByCartId(userId, shopCartId);
+		
+		if (null == shopCart) {
+			throw new ShopException(String.format("客户ID%s购物车商品%s不存在", userId, shopCartId));
+		}
+		
+		if (shopCart.getStatus() != ShopCartStatusEnum.USEABLE.getCode()) {
+			throw new ShopException(String.format("客户ID%s购物车商品%s状态不是 %s", userId, shopCartId, ShopCartStatusEnum.USEABLE));
+		}
+		
+		int rows = shopCartMapper.changStatusById(ShopCartStatusEnum.UNUSEABLE.getCode(), userId, shopCartId);
+		if (1 != rows) {
+			throw new ShopException("支付时 购物车删除商品 失败");
+		}
 	}
 
 }

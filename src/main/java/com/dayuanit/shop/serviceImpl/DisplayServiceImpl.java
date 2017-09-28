@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.dayuanit.shop.domain.Goods;
 import com.dayuanit.shop.domain.GoodsSort;
@@ -73,6 +74,22 @@ public class DisplayServiceImpl implements DisplayService{
 		}
 		
 		return goods;
+	}
+
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public void subGoodsRepertory(Integer goodsAccount, Integer goodsId) {
+		Goods goods = goodsMapper.getGoodsByIdForUpdate(goodsId);
+		
+		if (null == goods) {
+			throw new ShopException(String.format("商品%s查询失败", goodsId));
+		}
+		
+		int rows = goodsMapper.changeGoodsRepertory(-goodsAccount, goodsId);
+		
+		if (1 != rows) {
+			throw new ShopException("减库存失败");
+		}
 	}
 
 	

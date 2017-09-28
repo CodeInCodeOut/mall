@@ -1,0 +1,18 @@
+package com.dayuanit.shop.mapper;
+
+import java.util.List;
+
+import com.dayuanit.shop.domain.UserAddress;
+
+public interface UserAddressMapper {
+			
+	int addUserAddress(UserAddress userAddress);
+	
+	List<UserAddress> queryUserAddressByUserId(Integer userId);
+	
+	UserAddress queryUserDefuAddressByUserId(Integer userId);
+	
+	int setDefuAdress(Integer addressId);
+	
+	int deleteAdress(Integer addressId);
+}

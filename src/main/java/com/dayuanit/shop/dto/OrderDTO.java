@@ -6,7 +6,7 @@ public class OrderDTO {
 	
 	private Integer id;
 	
-	private Integer status;
+	private String status;
 	
 	private String userRealName;
 	
@@ -65,13 +65,6 @@ public class OrderDTO {
 		this.id = id;
 	}
 
-	public Integer getStatus() {
-		return status;
-	}
-
-	public void setStatus(Integer status) {
-		this.status = status;
-	}
 
 	public String getUserRealName() {
 		return userRealName;
@@ -113,6 +106,14 @@ public class OrderDTO {
 
 	public void setPayChannel(Integer payChannel) {
 		this.payChannel = payChannel;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 	
 	

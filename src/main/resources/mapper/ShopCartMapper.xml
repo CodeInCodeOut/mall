@@ -29,7 +29,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<select id="getShopCartByUserId" parameterType="int" resultMap="shopCartResultMap">
 		select <include refid="shop_cart_filed"></include> from shop_cart
-		where user_id=#{userId} and status="1";
+		where user_id=#{userId} and status="1" order by id desc;
+	</select>
+	
+	<select id="getShopCartByCartId" parameterType="int" resultMap="shopCartResultMap">
+		select <include refid="shop_cart_filed"></include> from shop_cart
+		where id=#{shopCartId} and user_id=#{userId};
 	</select>
 	
 	<update id="changStatusById" parameterType="int">

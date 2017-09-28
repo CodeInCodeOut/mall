@@ -33,6 +33,7 @@ import com.dayuanit.shop.mapper.GoodsMapper;
 import com.dayuanit.shop.mapper.OrderDetailMapper;
 import com.dayuanit.shop.mapper.OrderMapper;
 import com.dayuanit.shop.mapper.UserAddressMapper;
+import com.dayuanit.shop.service.DisplayService;
 import com.dayuanit.shop.service.OrderService;
 import com.dayuanit.shop.utils.CalculateUtil;
 import com.dayuanit.shop.utils.DateToString;
@@ -60,12 +61,9 @@ public class OrderServiceImpl implements OrderService{
 	@Autowired
 	private PayService payService;
 
+	@Autowired
+	private DisplayService displayService;
 	
-	@Override
-	public List<Order> listEffectivedOrder(Integer userId, Integer status) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
@@ -129,8 +127,9 @@ public class OrderServiceImpl implements OrderService{
 
 	@Override
 	public void changeOrderStatus(Integer userId, Integer orderId, Integer status) {
-		// TODO Auto-generated method stub
 		
+		
+		orderMapper.changeOrderStatus(orderId, userId, status);
 	}
 
 	@Override
@@ -144,13 +143,52 @@ public class OrderServiceImpl implements OrderService{
 	@Transactional(rollbackFor=Exception.class)
 	public void rollBackRepertoryTimeOut(Order order) {
 		// TODO Auto-generated method stub
-		if (order.getStatus() != 1) {
+		if (order.getStatus() != OrderStatusEnum.UNPAY.getCode()) {
 			return;
 		}
 		
-		Goods goods = goodsMapper.getGoodsByIdForUpdate(order.getId());
-		if (null == goods) {
-			throw new ShopException("超时回滚----更新库存 ---- 查询商品表  ----- 失败");
+		Order lockOrder = orderMapper.getOrderForUpdate(order.getId());
+		if (null == lockOrder) {
+			throw new ShopException("超时回滚----更新库存 ---- 锁order表  ----- 失败");
+		}
+		
+		if (lockOrder.getStatus() != OrderStatusEnum.UNPAY.getCode()) {
+			return;
+		}
+		
+		Date orderTime = order.getModifyTime();
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(orderTime);
+		cal.add(Calendar.MINUTE, 30);
+		
+		Date expTime = cal.getTime();
+		
+		if (expTime.after(new Date())) {
+			log.info(">>>>>处理订单{}时间不过期》》》", order.getId());
+			return;
+		}
+		
+		List<OrderDetail> listOrderDetail = orderDetailMapper.listOrderDetail(lockOrder.getId());
+		for (OrderDetail orderDetail : listOrderDetail) {
+			log.info("库存回滚商品信息getGoodsAccount{}", orderDetail.getGoodsAccount(), "getGoodsId{}", orderDetail.getGoodsId());
+			
+			Goods goods = goodsMapper.getGoodsByIdForUpdate(orderDetail.getGoodsId());
+			if (null == goods) {
+				throw new ShopException("超时回滚----更新库存 ---- 查询商品表  ----- 失败");
+			}
+			
+			int rows = goodsMapper.changeGoodsRepertory(orderDetail.getGoodsAccount(), orderDetail.getGoodsId());
+			
+			if (1 != rows) {
+				throw new ShopException("超时回滚----更新库存---失败");
+			}
+			
+		}
+		
+		int rows = orderMapper.changeOrderStatus(lockOrder.getId(), lockOrder.getUserId(), OrderStatusEnum.ORDERFAILURE.getCode());
+		
+		if (1 != rows) {
+			throw new ShopException("超时回滚----更新订单状态为失效---失败");
 		}
 		
 	}
@@ -285,7 +323,7 @@ public class OrderServiceImpl implements OrderService{
 	public void excuteCreateOrder(List<BuyGoodsDto> bdt, Integer userId) {
 		Order order = new Order();
 		order.setStatus(0);
-		order.setOrderFrom(2);
+		order.setOrderFrom(OrderFromEnum.FROMCART.getCode());
 		order.setUserId(userId);
 		
 		String totalMoney = "0";
@@ -352,6 +390,7 @@ public class OrderServiceImpl implements OrderService{
 	}
 
 	@Override
+	@Transactional(rollbackFor=Exception.class)
 	public PayOrderUrlDTO orderToPay(Integer orderId, Integer userId, Integer payChannel, Integer addressId) {
 		// TODO Auto-generated method stub
 		Order order = orderMapper.getOrderById(orderId, userId);
@@ -401,6 +440,13 @@ public class OrderServiceImpl implements OrderService{
 			throw new ShopException("--订单更新待付款失败---");		
 		}
 		
+		
+		List<OrderDetail> listOrderDetail = orderDetailMapper.listOrderDetail(order.getId());
+		for (OrderDetail orderDetail : listOrderDetail) {
+			log.info("下单支付减库存商品getGoodsAccount{}", orderDetail.getGoodsAccount(), "getGoodsId{}", orderDetail.getGoodsId());
+			displayService.subGoodsRepertory(orderDetail.getGoodsAccount(), orderDetail.getGoodsId());
+		}
+		
 		//请求支付系统 获取支付地址
 		PayOrder payOrder = new PayOrder();
 		payOrder.setAmount(order.getTotalPrice());
@@ -432,7 +478,7 @@ public class OrderServiceImpl implements OrderService{
 			
 			orderDTO.setCreateTime(DateToString.to(order.getCreateTime()));
 			orderDTO.setId(order.getId());
-			orderDTO.setStatus(order.getStatus());
+			orderDTO.setStatus(OrderStatusEnum.getEnum(order.getStatus()).getValue());
 			orderDTO.setTotalPrice(order.getTotalPrice());
 			orderDTO.setUserRealName(order.getUserRealName());
 			
@@ -469,7 +515,7 @@ public class OrderServiceImpl implements OrderService{
 			
 			orderDTO.setCreateTime(DateToString.to(order.getCreateTime()));
 			orderDTO.setId(order.getId());
-			orderDTO.setStatus(order.getStatus());
+			orderDTO.setStatus(OrderStatusEnum.getEnum(order.getStatus()).getValue());
 			orderDTO.setTotalPrice(order.getTotalPrice());
 			orderDTO.setUserRealName(order.getUserRealName());
 			
@@ -508,7 +554,7 @@ public class OrderServiceImpl implements OrderService{
 			
 			orderDTO.setCreateTime(DateToString.to(order.getCreateTime()));
 			orderDTO.setId(order.getId());
-			orderDTO.setStatus(order.getStatus());
+			orderDTO.setStatus(OrderStatusEnum.getEnum(order.getStatus()).getValue());
 			orderDTO.setTotalPrice(order.getTotalPrice());
 			orderDTO.setUserRealName(order.getUserRealName());
 			
@@ -538,6 +584,9 @@ public class OrderServiceImpl implements OrderService{
 	@Transactional(rollbackFor=Exception.class)
 	public void processPayresult(Integer orderId, Integer payId) {
 		Order order = orderMapper.getOrderForUpdate(orderId);
+		if (null == order) {
+			return;
+		}
 		if (OrderStatusEnum.UNPAY.getCode() != order.getStatus()) {
 			return;
 		}
@@ -552,8 +601,102 @@ public class OrderServiceImpl implements OrderService{
 		
 	}
 
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public PayOrderUrlDTO unPayOrderToPay(Integer userId, Integer orderId) {
+		Order order = orderMapper.getOrderForUpdate(orderId);
+		if (null == order) {
+			throw new ShopException("--订单支付--- 查询商品表  ----- 失败");	
+		}
+		
+		if (order.getUserId() != userId) {
+			throw new ShopException("--订单不属于你  无权操作---");
+		}
+		
+		if (order.getStatus() != OrderStatusEnum.UNPAY.getCode()) {
+			throw new ShopException("--订单不能支付---");	
+		}
+		
+		Date orderTime = order.getModifyTime();
+		
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(orderTime);
+		cal.add(Calendar.MINUTE, 30);
+		
+		Date expDate = cal.getTime();
+		
+		if (new Date().after(expDate)) {
+			throw new ShopException("--订单超时失效---");
+		}
+		
+		//请求支付系统 获取支付地址
+		PayOrder payOrder = new PayOrder();
+		payOrder.setAmount(order.getTotalPrice());
+		payOrder.setBankId(null);
+		payOrder.setBizId(String.valueOf(order.getId()));
+		payOrder.setDetailMsg("大猿商城");
+		payOrder.setPayChannel(order.getPayChannel());
+		payOrder.setUserId(order.getUserId());
+		
+		PayOrderUrlDTO payOrderUrlDTO = payService.addPayOrder(payOrder);
+		
+		return payOrderUrlDTO;
+	}
+
+	@Override
+	public Order nowCreateOrder(Integer userId, Integer goodsId, Integer goodsAccount) {
+		Goods goods  = goodsMapper.getGoodsById(goodsId);
+		
+		if (null == goods) {
+			throw new ShopException("---- 查询商品  ----- 失败");	
+		}
+		
+		if (goods.getStatus() != GoodsStatusEnum.GOODSUP.getCode()) {
+			throw new ShopException(String.format("商品%s下架", goods.getGoodsName()));	
+		}
+		
+		if (goods.getGoodsRepertory() < goodsAccount) {
+			throw new ShopException(String.format("商品%s库存不足", goods.getGoodsName()));
+		}
+		
+		String totalPrice = CalculateUtil.mul(String.valueOf(goodsAccount), goods.getPrice());
+		
+		Order order = new Order();
+		order.setOrderFrom(OrderFromEnum.FROMGOOGSPAGE.getCode());
+		order.setStatus(OrderStatusEnum.GOSETTLEMENT.getCode());
+		order.setUserId(userId);
+		order.setTotalPrice(totalPrice);
+		
+		int rows = orderMapper.createOrder(order);
+		
+		if (1 != rows) {
+			throw new ShopException("--立即购买去结算失败---");		
+		}
+		
+		OrderDetail orderDetail = new OrderDetail();
+		orderDetail.setGoodsAccount(goodsAccount);
+		orderDetail.setGoodsId(goodsId);
+		orderDetail.setGoodsName(goods.getGoodsName());
+		orderDetail.setGoodsTotalPrice(totalPrice);
+		orderDetail.setOrderId(order.getId());
+		orderDetail.setPrice(goods.getPrice());
+		
+		rows = orderDetailMapper.saveOrderDetail(orderDetail);
+		
+		if (1 != rows) {
+			throw new ShopException("--立即购买----去结算--订单详情--失败---");		
+		}
+		
+		return order; 
+	}
+
+	@Override
+	public List<Order> listUnPayOrderForRollBack(Integer status) {
+		List<Order> listUnPayOrderForRollBack = orderMapper.listOrderByUserIdAndStatus(null, status);
+		return listUnPayOrderForRollBack;
+	}
+
 	
 
 }
 	
-

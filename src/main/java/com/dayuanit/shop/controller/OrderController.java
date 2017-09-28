@@ -1,6 +1,10 @@
 package com.dayuanit.shop.controller;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+
+import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -26,6 +30,8 @@ import com.dayuanit.shop.exception.ShopException;
 import com.dayuanit.shop.service.DisplayService;
 import com.dayuanit.shop.service.OrderDetailService;
 import com.dayuanit.shop.service.OrderService;
+import com.dayuanit.shop.service.RedisService;
+import com.dayuanit.shop.service.ShopCartService;
 import com.dayuanit.shop.utils.PageUtils;
 import com.dayuanit.shop.vo.BuyGoodsVo;
 
@@ -40,6 +46,16 @@ public class OrderController {
 	
 	@Autowired
 	private OrderDetailService  orderDetailService;
+	
+	@Resource(name="redisTempServiceImpl")
+	private RedisService redisService;
+	
+	@Autowired
+	private ShopCartService shopCartService;
+	
+//	@Autowired
+//	@Qualifier("redisTempServiceImpl")
+//	private RedisService redisService;
 	
 	@RequestMapping("/myorder")
 	public String myorder() {
@@ -74,12 +90,23 @@ public class OrderController {
 	
 	@RequestMapping("/pay")
 	@ResponseBody
-	public AjaxResultDTO orderToPay(Integer orderId, Integer payChannel, Integer addressId) {
+	public AjaxResultDTO ordertoPay(Integer orderId, Integer payChannel, Integer addressId) {
 		
-			Integer userId = 1;
-			log.info("订单修改状态待支付信息orderId{}", orderId, "订单修改状态待支付信息userId{}", userId, "订单修改状态待支付信息payChannel{}", payChannel, "订单修改状态待支付信息addressId{}", addressId);
-			try {
-				PayOrderUrlDTO payOrderUrlDTO = orderService.orderToPay(orderId, userId, payChannel, addressId);
+		Integer userId = 1;
+		log.info("订单修改状态待支付信息orderId{}", orderId, "订单修改状态待支付信息userId{}", userId, "订单修改状态待支付信息payChannel{}", payChannel, "订单修改状态待支付信息addressId{}", addressId);
+		try {
+			
+			PayOrderUrlDTO payOrderUrlDTO = orderService.orderToPay(orderId, userId, payChannel, addressId);
+			
+			Set<Integer> cartIds = redisService.getCartId(userId);
+			for (Integer cartId : cartIds) {
+				log.info(String.format("redis中购物车的id {} ,", cartId));
+				shopCartService.deleteShopCartOnPay(userId, cartId);
+			}
+			
+			String key = "cart:cache:" + userId;
+			redisService.deleteKey(key);
+			
 			return AjaxResultDTO.success(payOrderUrlDTO);
 		} catch (ShopException se) {
 			log.error("订单修改状态待支付 异常信息 ， {}", se.getMessage(), se);
@@ -92,23 +119,66 @@ public class OrderController {
 	}
 	
 	
+	@RequestMapping("/unPayOrderToPay")
+	@ResponseBody
+	public AjaxResultDTO unPayOrderToPay(Integer userId, Integer orderId) {
+		
+		userId = 1;
+		log.info("订单修改状态待支付信息orderId{}", orderId, "订单修改状态待支付信息userId{}", userId);
+		try {
+			PayOrderUrlDTO payOrderUrlDTO = orderService.unPayOrderToPay(userId, orderId);
+		return AjaxResultDTO.success(payOrderUrlDTO);
+	} catch (ShopException se) {
+		log.error("订单修改状态待支付 异常信息 ， {}", se.getMessage(), se);
+		return AjaxResultDTO.failed("系统异常  请联系客服");
+	} catch (Exception e) {
+		log.error("订单修改状态待支付 异常信息 ， {}", e.getMessage(), e);
+		return AjaxResultDTO.failed("系统异常  请联系客服");
+	}
+		
+	}
+	
+	@RequestMapping("/nowCreateOrder")
+	@ResponseBody
+	public AjaxResultDTO nowCreateOrder (Integer goodsId, Integer goodsAccount) {
+		log.info("立即购买结算信息goodsId{}",goodsId, "立即购买结算信息goodsAccount{}",goodsAccount);
+		Integer userId = 1;
+		try {
+			Order order = orderService.nowCreateOrder(userId, goodsId, goodsAccount);
+			return AjaxResultDTO.success(order);
+		} catch(ShopException se) {
+			log.error("立即购买结算信息异常信息{}", se.getMessage(), se);
+			return AjaxResultDTO.failed("立即购买结算订单异常 请联系客服");
+		} catch (Exception e) {
+			log.error("立即购买结算信息订单未知异常信息{}", e.getMessage(), e);
+			return AjaxResultDTO.failed("系统异常  请联系客服");
+		}
+		
+	}
+	
 
 	@RequestMapping("/createOrder4JsonBody")
 	@ResponseBody
 	public AjaxResultDTO createOrder4JsonBody(@RequestBody List<BuyGoodsVo> vos) {
 		log.info("购买结算信息List<BuyGoodsVo>{}", vos);
 		try {
+			Integer userId = 1;
 			
 			if (0 ==vos.size()) {
 				return AjaxResultDTO.failed("系统异常  请联系客服");
 			}
 			
+			List<Integer> listCartId = new ArrayList<Integer>(vos.size());
+			
 			for (BuyGoodsVo vo : vos) {
 				log.info("购买结算信息vo.goodsId{}", vo.getGoodsId());
 				log.info("购买结算信息vo.goodsAccount{}", vo.getGoodsAccount());
+				log.info("购买结算信息vo.getShopCartId{}", vo.getShopCartId());
+				listCartId.add(vo.getShopCartId());
 			}
 			
-			Integer userId = 1;
+			redisService.saveCartId(listCartId, userId);
+			
 			Order order = orderService.createOrder(vos, userId);
 			
 			return AjaxResultDTO.success(order);
@@ -132,6 +202,7 @@ public class OrderController {
 			for (BuyGoodsVo vo : voList) {
 				log.info("购买结算信息vo.goodsId{}", vo.getGoodsId());
 				log.info("购买结算信息vo.goodsAccount{}", vo.getGoodsAccount());
+				
 			}
 			return AjaxResultDTO.success();
 		} catch(Exception e) {

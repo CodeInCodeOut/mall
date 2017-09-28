@@ -1,0 +1,19 @@
+package com.dayuanit.shop.exception;
+
+public class ShopException extends RuntimeException{
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	
+	public ShopException() {
+		
+	}
+	
+	public ShopException(String errorInfo) {
+		super(errorInfo);
+	}
+
+}

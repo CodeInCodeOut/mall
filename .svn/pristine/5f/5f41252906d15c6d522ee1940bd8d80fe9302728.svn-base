@@ -1,0 +1,133 @@
+package com.dayuanit.shop.serviceImpl;
+
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.dayuanit.shop.domain.Goods;
+import com.dayuanit.shop.domain.Order;
+import com.dayuanit.shop.exception.ShopException;
+import com.dayuanit.shop.mapper.GoodsMapper;
+import com.dayuanit.shop.mapper.OrderMapper;
+import com.dayuanit.shop.service.OrderService;
+
+@Service
+public class OrderServiceImpl implements OrderService{
+	
+	private static final Logger log = LoggerFactory.getLogger(OrderServiceImpl.class);
+	
+	@Autowired
+	private OrderMapper orderMapper;
+	
+	@Autowired
+	private GoodsMapper goodsMapper;
+
+	
+
+	@Override
+	public List<Order> listEffectivedOrder(Integer userId, Integer status) {
+		// TODO Auto-generated method stub
+		
+		List<Order> listEffectivedOrder = orderMapper.listOrderByUserIdAndStatus(userId, status);
+		 
+		if (null == listEffectivedOrder) {
+			throw new ShopException("查询客户订单表所有的有效订单失败 ");
+		}
+		 
+		return listEffectivedOrder;
+	}
+
+
+
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public void createOrder(Order order) {
+		// TODO Auto-generated method stub
+		
+		Goods goods = goodsMapper.getGoodsByIdForUpdate(order.getId());
+		if (null == goods) {
+			throw new ShopException("下单---更新库存 ---- 查询商品表  ----- 失败");
+		}
+		
+		if(order.getGoodsAccount() > goods.getGoodsRepertory()) {
+			throw new ShopException("下单---库存不足 ----- 失败");
+		}
+		
+		int rows = orderMapper.createOrder(order);
+		
+		if (1 != rows) {
+			throw new ShopException("客户下单失败");
+		}
+		
+		rows = goodsMapper.changeGoodsRepertory(-order.getGoodsAccount(), order.getGoodsId());
+		log.info("----------商品表减少库存------------", order.getGoodsAccount());
+		if (1 != rows) {
+			throw new ShopException("商品表减少库存 失败");
+		}
+	
+	}
+
+
+
+	@Override
+	public void changeOrderStatus(Integer userId, Integer orderId, Integer status) {
+		// TODO Auto-generated method stub
+		
+		int rows = orderMapper.changeOrderStatus(userId, orderId, status);
+		
+		if (1 != rows) {
+			throw new ShopException("客户取消订单失败");
+		}
+		
+	}
+
+
+
+	@Override
+	public void deleteOrder(Integer status, Integer userId, Integer orderId) {
+		// TODO Auto-generated method stub
+		
+		int rows = orderMapper.changeOrderStatus(status, userId, orderId);
+		
+		if (1 != rows) {
+			throw new ShopException("客户删除订单失败");
+		}
+		
+	}
+
+
+
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public void rollBackRepertoryTimeOut(Order order) {
+		// TODO Auto-generated method stub
+		if (order.getStatus() != 1) {
+			return;
+		}
+		
+		Goods goods = goodsMapper.getGoodsByIdForUpdate(order.getId());
+		if (null == goods) {
+			throw new ShopException("超时回滚----更新库存 ---- 查询商品表  ----- 失败");
+		}
+		
+		int rows = goodsMapper.changeGoodsRepertory(order.getGoodsAccount(), order.getGoodsId());
+		
+		if (1 != rows) {
+			throw new ShopException("商品表回滚     增加库存 失败");
+		}
+		
+		Integer userId = 1;
+		Integer status = 3;
+		rows = orderMapper.changeOrderStatus(status, order.getUserId(), order.getId());
+		
+		if (1 != rows) {
+			throw new ShopException("订单表 ------ 改变订单状态为订单失效------失败");
+		}
+		
+	}
+
+}

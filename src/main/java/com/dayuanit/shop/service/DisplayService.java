@@ -17,4 +17,6 @@ public interface DisplayService {
 	 
 	 Goods getGoodsById(Integer goodsId);
 	 
+	 void subGoodsRepertory(Integer goodsAccount,Integer goodsId);
+	 
 }

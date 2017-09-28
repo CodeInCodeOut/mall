@@ -141,7 +141,7 @@ function settlementReady() {
 	for (var i = 0; i < buyGoodsArray.length; i ++) {
 		var index = buyGoodsArray[i];
 		var cart = goodsShow.shopCart[index];
-		var stringJson = {goodsId : cart.goodsId, goodsAccount : cart.goodsAccount}
+		var stringJson = {shopCartId : cart.id, goodsId : cart.goodsId, goodsAccount : cart.goodsAccount}
 		jsonObj.push(stringJson);
 		
 	}

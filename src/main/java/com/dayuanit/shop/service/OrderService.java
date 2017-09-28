@@ -34,14 +34,18 @@ public interface OrderService {
 	
 	void processPayresult(Integer orderId, Integer payId);
 	
+	PayOrderUrlDTO unPayOrderToPay(Integer userId, Integer orderId);
 	
+	Order nowCreateOrder(Integer userId, Integer goodsId, Integer goodsAccount);
 	
-	List<Order> listEffectivedOrder(Integer userId, Integer status);
+	void rollBackRepertoryTimeOut(Order order);
 	
 	void changeOrderStatus(Integer userId, Integer orderId, Integer status);
 	
+	List<Order> listUnPayOrderForRollBack(Integer status);
+	
 	void deleteOrder(Integer status, Integer userId, Integer orderId);
 	
-	void rollBackRepertoryTimeOut(Order order);
+	
 	
 }

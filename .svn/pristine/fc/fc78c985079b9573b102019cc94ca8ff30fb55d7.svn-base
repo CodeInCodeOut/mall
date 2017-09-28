@@ -1,0 +1,18 @@
+package com.dayuanit.shop.mapper;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.dayuanit.shop.domain.Order;
+
+public interface OrderMapper {
+
+	int createOrder(Order order);
+	
+	List<Order> listOrderByUserIdAndStatus(@Param("userId")Integer userId, @Param("status")Integer status);
+	
+	int changeOrderStatus(@Param("status")Integer status, @Param("userId")Integer userId, @Param("orderId")Integer orderId);
+	
+	
+}

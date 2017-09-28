@@ -16,6 +16,8 @@ public class RedisJava {
 		
 		 Jedis jedis = new Jedis("192.168.8.170", 6379);
 		 
+		 
+		
 		 jedis.lpush("site-list", "Runoob");
 		 jedis.lpush("site-list", "Google");
 		 jedis.lpush("site-list", "Taobao");

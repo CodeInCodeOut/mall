@@ -1,0 +1,315 @@
+.wrap{
+	width: 1000px;
+	margin: 0 auto;
+}
+.head_top{
+	height: 31px;
+	line-height: 31px;
+}
+.leftArea{
+	float: left;
+}
+.rightArea{
+	padding-right: 20px;
+	float: right;
+}
+#collection{
+	padding-left: 20px;
+	background: url(../images/collection.png) left center no-repeat;
+}
+.search{
+	height: 84px;
+	background: #1d7ad9;
+}
+.logo{
+	padding-top: 13px;
+	padding-left: 30px;
+	float: left;
+}
+.search_box{
+	padding-left: 34px;
+	padding-top: 23px;
+	float: left;
+}
+#search_input{
+	height: 34px;
+	width: 350px;
+	padding: 0 5px;
+	font-size: 14px;
+	line-height: 34px\9;
+	float: left;
+} 
+#search_btn{
+	height: 34px;
+	width: 70px;
+	background: #ff8c00;
+	color: #fff;
+	font-size: 14px;
+	font-family: "Microsoft YaHei","微软雅黑";
+	float: left;
+	cursor: pointer;
+}
+.shop_car{
+	padding-top: 23px;
+	padding-left: 30px;
+	float: left;
+}
+.shop_car span{
+	display: block;
+	height: 34px;
+	float: left;
+	color: #fff;
+	font-family: "Microsoft YaHei","微软雅黑";
+	font-size: 14px;
+	line-height: 34px;
+}
+.shop_car .car{
+	width: 87px;
+	border-right: 1px solid #e27a00;
+	background:#ff8800 url(../images/shop_car.png) 10px center no-repeat;
+	text-indent: 40px;
+}
+
+.shop_car .num_text{
+	width: 27px;
+	background: #ff8800 url(../images/shop_car_jt.png) 33px center no-repeat;
+	border-left: 1px solid #ff9c01;
+	text-align: right;
+	padding-right: 29px;
+
+}
+/*导航栏*/
+.nav{
+	height: 35px;
+	background: #1369c0;
+}
+.allCommodity{
+	width: 189px;
+	position: relative;
+	float: left;
+}
+.allCommodity h3{
+	text-align: center;
+	font:16px/35px "Microsoft YaHei","微软雅黑";
+	color: #fff;
+	background: url(../images/all_jt.png) 148px center no-repeat;
+}
+.commodity_List{
+	width: 100%;
+	background: #5aa1fe;
+	position: absolute;
+	top: 35px;
+	left: 0;
+}
+.commodity_List dl{
+	padding: 12px 13px 12px 10px;
+	background: #4593fd;
+	border-bottom: 1px solid #3487f2;
+	margin-bottom: 1px;
+}
+.commodity_List dl:hover{
+	background: #fff;
+	border-left: 1px solid #3487f2;
+}
+.commodity_List dl:hover a{
+	color: #000;
+}
+.commodity_List dl:hover .aLink{
+	color: #fff;
+}
+.commodity_List dl:hover dt{
+	background: transparent;
+}
+.commodity_List dt{
+	background: url(../images/show_jt.png) right center no-repeat;
+}
+.commodity_List dt a{
+	font:14px/21px "Microsoft YaHei","微软雅黑";
+	color: #fff;
+}
+.commodity_List dd a{
+	font: 12px/21px "宋体";
+	color: #fff;
+}
+.aLink{
+	display: inline-block;
+	height: 21px;
+	text-decoration: underline;
+	background: #106ac0;
+	border-radius: 10px;
+	padding: 0 5px;
+}
+.commodity_show{
+	width: 569px;
+	background: #fff;
+	border: 1px solid #dddddd;
+	position: absolute;
+	top: 35px;
+	left: 189px;
+}
+.showBox{
+	padding: 0 20px;
+}
+.commodity_item{
+	border-bottom: 1px solid #e5e5e5;
+	padding:10px 0 5px; 
+	line-height: 24px;
+}
+.commodity_item dt{
+	height: 24px;
+	padding-left: 1px;
+}
+.commodity_item dt a{
+	color: #4b88da;
+	font-weight: bold;
+}
+.commodity_item dd{
+	margin-top: -24px;
+	margin-left: 72px;
+}
+.commodity_item dd a{
+	color: #666666;
+	margin-right: 8px;
+}
+.channel{
+	padding: 15px 0;
+}
+.channel a{
+	color: #fff;
+	background: #2785e6;
+	padding: 8px 14px 6px;
+}
+.channel span{
+	display: inline-block;
+	width: 8px;
+	height: 9px;
+	background: url(../images/show_jt.png) left center no-repeat;
+	margin-left: 9px;
+}
+#navlist{
+	float: left;
+}
+#navlist li{
+	float: left;
+}
+#navlist li a:link,#navlist li a:visited{
+	display: block;
+	height: 35px;
+	color: #fff;
+	font:14px/35px "Microsoft YaHei","微软雅黑";
+	padding: 0 24px;
+}
+#navlist li a:hover,#navlist li a:active{
+	background: #4593fd;
+}
+
+/*banner*/
+.banner_box{
+	width: 811px;
+	height: 326px;
+	overflow: hidden;
+	float: right;
+}
+.banner_box li{
+	float: left;
+}
+/*商品区*/
+.shop_title{
+	height: 45px;
+	padding: 15px 0;
+}
+.shop_title h3{
+	height: 45px;
+	font-size: 24px;
+	font-style: "Microsoft YaHei","微软雅黑";
+	line-height: 45px;
+	background: url(../images/commodity_class.png) left center no-repeat;
+	padding-left: 57px;
+	float: left;
+}
+.shop_title span{
+	padding-top: 33px;
+	padding-right: 21px;
+	float: right;
+}
+.shop_banner{
+	float: left;
+}
+.shop_list{
+	width: 808px;
+	border:1px solid #e5e5e5;
+	border-bottom:3px solid #ff7201;
+	float: left;
+	overflow: hidden;
+}
+.shoplist_box{
+	margin-right: -4px;
+
+}
+.shop_list .shopItem_top{
+	width: 202px;
+	height: 280px;
+	text-align: center;
+	border-right: 1px solid #e5e5e5;
+	border-bottom: 1px solid #e5e5e5;
+	float: left;
+}
+.shopItem_top .shop_img{
+	padding: 45px 0 20px 0;
+}
+.shopItem_top h4{
+	font-style: "Microsoft YaHei","微软雅黑";
+	font-size: 16px;
+}
+.shopItem_top p{
+	font-size: 14px;
+	color: #ff7300;
+	line-height: 21px;
+}
+.shop_list .shopItem_bottom{
+	width: 202px;
+	height: 115px;
+	border-right: 1px solid #e5e5e5;
+	float: left;
+}
+.shopItem_bottom .shop_img{
+	width: 100px;
+	height: 85px;
+	padding-top: 30px;
+	text-align: center;
+	float: left;
+}
+.shopItem_bottom .shop_img img{
+	width: 80px;
+	height: 64px;
+}
+.shopItem_bottom .shop_text{
+	width: 100px;
+	padding-top: 32px;
+	float: left;
+}
+.shopItem_bottom .shop_text p{
+	color: #ff7300;
+}
+.shopItem_bottom .shop_text span{
+	font-size: 16px;
+	font-family: "Microsoft YaHei","微软雅黑";
+	color: #363636;
+}
+
+/*footer*/
+#footer{
+	background: #d4d4d4;
+	text-align: center;
+	padding: 50px 0;
+	margin-top: 40px;
+}
+#footer p{
+	line-height: 24px;
+}
+.credit_rating{
+	padding-top: 24px;
+}
+.credit_rating a{
+	padding: 0 12px;
+}
