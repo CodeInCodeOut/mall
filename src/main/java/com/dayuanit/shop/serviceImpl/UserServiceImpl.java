@@ -10,7 +10,7 @@ import com.dayuanit.shop.mapper.UserMapper;
 import com.dayuanit.shop.service.UserService;
 
 
-@Service
+@Service("userService")
 public  class UserServiceImpl implements UserService{
 	
 	@Autowired

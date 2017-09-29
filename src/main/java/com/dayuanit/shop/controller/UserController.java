@@ -7,6 +7,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -33,25 +36,28 @@ public class UserController extends BaseController{
 		return "regist";
 	}
 	
-	
 	@RequestMapping("/toLogin")
 	public String toLogin(HttpServletRequest req) {
 		return "login";
 	}
 	
-	@RequestMapping("/toUserCenter")
-	public String toUserCenter() {
-		return "usercenter";
+	@RequestMapping("/index")
+	public String index() {
+		return "welcome";
 	}
 	
 	
 	@RequestMapping(value="/logout",method = { RequestMethod.POST, RequestMethod.GET })  
 	public String logout(HttpServletRequest req) {
 		
-		HttpSession sssion = req.getSession(false);
-		if (null != sssion) {
-			sssion.invalidate();
-		}
+		Subject subject = SecurityUtils.getSubject();
+		subject.logout();
+		
+		
+//		HttpSession sssion = req.getSession(false);
+//		if (null != sssion) {
+//			sssion.invalidate();
+//		}
 			
 		return "redirect:/index.jsp";
 	}
@@ -68,15 +74,23 @@ public class UserController extends BaseController{
 				session.removeAttribute("code");
 				return AjaxResultDTO.failed("验证码错误");
 			}
-			User loginUser = userService.login(userName, password);
-			req.getSession().setAttribute(LOGIN_FLAG, loginUser);
-			
-			Cookie cookie = new Cookie("userFlag", "xxxxxxxxx");
-			cookie.setHttpOnly(true);
-			resp.addCookie(cookie);
+//			User loginUser = userService.login(userName, password);
+//			req.getSession().setAttribute(LOGIN_FLAG, loginUser);
+//			
+//			Cookie cookie = new Cookie("userFlag", "xxxxxxxxx");
+//			cookie.setHttpOnly(true);
+//			resp.addCookie(cookie);
 //			cookie.setMaxAge(60 * 60 * 24);
 //			cookie.setPath("/");
 //			resp.addCookie(cookie);
+			
+			Subject subject = SecurityUtils.getSubject();
+			UsernamePasswordToken upt = new UsernamePasswordToken();
+			upt.setUsername(userName);
+			upt.setPassword(password.toCharArray());
+			subject.login(upt);
+			
+			
 			
 		} catch(Exception e) {
 			return AjaxResultDTO.failed(e.getMessage());

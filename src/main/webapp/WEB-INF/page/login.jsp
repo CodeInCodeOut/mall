@@ -112,7 +112,7 @@ function login() {
             	return;
             }
             
-            window.location.href='/user/toUserCenter.do';
+            window.location.href='/userOrder/toMyOrder.do';
             
         },
         error:function(xhr,textStatus){

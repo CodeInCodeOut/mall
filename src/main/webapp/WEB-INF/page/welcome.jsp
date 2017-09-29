@@ -1,3 +1,5 @@
+<%@page contentType="text/html; charset=utf-8" %>
+<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,7 +15,15 @@
 			<div class="leftArea">
 				<a href="#" id="collection">收藏京西</a>
 			</div>
+			
+			<shiro:guest>
 			<div class="rightArea">欢迎来到京西网！<a href="user/toLogin.do?#">[登录]</a><a href="user/toRegist.do?#">[免费注册]</a></div>
+			</shiro:guest>
+			<shiro:user>
+			<div class="rightArea">欢迎[<shiro:principal/>]来到京西网！<a href="/userOrder/toMyOrder.do"></a>我的订单</div>
+			</shiro:user>
+			
+			
 		</div>
 	</div>
 	<div class="search">
